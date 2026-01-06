@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Relatorio Diário</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background:#0b1220; color:#e7eefc; }
+    header { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { margin: 0 0 6px; font-size: 18px; }
+    .muted { opacity:.8; font-size: 12px; line-height: 1.4; }
+    .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; padding: 16px; }
+    @media (max-width: 980px){ .grid { grid-template-columns: 1fr; } }
+    .card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 14px; }
+    .card h2 { margin: 0 0 10px; font-size: 14px; }
+    label { display:block; font-size:12px; opacity:.85; margin: 10px 0 6px; }
+    input, select, textarea {
+      width: 100%; box-sizing: border-box;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: #e7eefc;
+      padding: 10px;
+      border-radius: 10px;
+      outline: none;
+    }
+    textarea { min-height: 280px; resize: vertical; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .btns { display:flex; gap:10px; flex-wrap: wrap; margin-top: 12px; }
+    button {
+      cursor:pointer; border-radius: 12px; padding: 10px 12px; font-weight: 700;
+      background: rgba(255,255,255,.07); color:#e7eefc;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    button.primary { background: rgba(99, 179, 237, .18); border-color: rgba(99, 179, 237, .35); }
+    button.danger { background: rgba(239, 68, 68, .13); border-color: rgba(239, 68, 68, .30); }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+    hr { border:none; border-top:1px solid rgba(255,255,255,.08); margin: 14px 0; }
+    .list { display:grid; gap: 10px; margin-top: 10px; }
+    .locItem { border: 1px solid rgba(255,255,255,.10); border-radius: 12px; padding: 10px; background: rgba(255,255,255,.03); }
+    .locTop { display:flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .locTitle { font-weight: 800; font-size: 13px; }
+    .pill { font-size: 12px; opacity:.85; padding: 2px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); }
+    .people { margin-top: 10px; display:grid; gap: 8px; }
+    .person { border: 1px solid rgba(255,255,255,.10); border-radius: 10px; padding: 8px; background: rgba(255,255,255,.03); display:flex; flex-direction:column; gap:6px; }
+    .personHead { display:flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .personInfo { display:flex; flex-direction:column; }
+    .personName { font-weight: 800; }
+    .personActions { display:flex; gap:8px; align-items:center; }
+    .small { font-size: 12px; opacity:.85; }
+    .checks { display:flex; flex-wrap: wrap; gap: 10px; align-items:center; }
+    .check { display:flex; align-items:center; gap: 8px; padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); font-size: 12px; }
+    .check input[type="checkbox"] { width: auto; margin: 0; }
+    .temp-input { width: 120px; min-width: 100px; padding: 8px; margin-left: 6px; border-radius: 8px; }
+    .muted-inline { opacity:.7; font-size:12px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Relatorio Diário</h1>
+    <div class="muted">Você só preenche campos padronizados. O texto sai no mesmo formato sempre.</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+
+    <!-- ESQUERDA -->
+    <section class="card">
+      <h2>1) Cabeçalho</h2>
+      <div class="row">
+        <div>
+          <label for="equipe">Equipe</label>
+          <input id="equipe" value="EQUIPE 02" aria-label="Equipe" />
+        </div>
+        <div>
+          <label for="data">Data</label>
+          <input id="data" type="date" aria-label="Data" />
+        </div>
+      </div>
+
+      <div class="row3">
+        <div><label for="denuncias">Denúncias respondidas</label><input id="denuncias" type="number" min="0" value="0" aria-label="Denúncias respondidas" /></div>
+        <div><label for="acolhimentos">Acolhimentos solicitados</label><input id="acolhimentos" type="number" min="0" value="0" aria-label="Acolhimentos solicitados" /></div>
+        <div><label for="encaminhamentos">Encaminhamentos realizados</label><input id="encaminhamentos" type="number" min="0" value="0" aria-label="Encaminhamentos realizados" /></div>
+      </div>
+
+      <div class="row3">
+        <div><label for="mascaras">Entregas de máscara</label><input id="mascaras" type="number" min="0" value="0" aria-label="Entregas de máscara" /></div>
+        <div><label for="vistos">Vistos (pessoas que conhecemos)</label><input id="vistos" type="number" min="0" value="0" aria-label="Vistos" /></div>
+        <div><label for="naoAbordadas">Encontradas e não abordadas</label><input id="naoAbordadas" type="number" min="0" value="0" aria-label="Encontradas e não abordadas" /></div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="abordadas">Quantidade de pessoas abordadas (AUTO)</label>
+          <input id="abordadas" type="number" value="0" disabled aria-label="Quantidade de pessoas abordadas" />
+        </div>
+        <div>
+          <label for="autor">Autor do relatório</label>
+          <input id="autor" placeholder="Ex: Bruno Lacerda" aria-label="Autor do relatório" />
+        </div>
+      </div>
+
+      <hr>
+
+      <h2>2) Localidade (campos fixos)</h2>
+      <div class="row3">
+        <div>
+          <label for="setor">Setor</label>
+          <select id="setor" aria-label="Setor">
+            <option>Setor Central</option>
+            <option>Setor Sul</option>
+            <option>Setor Norte</option>
+            <option>Setor Oeste</option>
+            <option>Ponte Alta Norte</option>
+            <option>Setor Leste</option>
+            <option>Santa Maria</option>
+          </select>
+        </div>
+        <div>
+          <label for="quadra">Quadra / Área</label>
+          <input id="quadra" placeholder="Ex: Quadra 51 / Área Especial" aria-label="Quadra ou área" />
+        </div>
+        <div>
+          <label for="referencia">Referência</label>
+          <input id="referencia" placeholder="Ex: Próximo à Loja Pernambucanas" aria-label="Referência" />
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="primary" id="addLocBtn" aria-label="Adicionar localidade">Adicionar localidade</button>
+        <button class="danger" id="clearBtn" aria-label="Limpar tudo">Limpar tudo</button>
+        <button id="exportBtn" aria-label="Exportar estado JSON">Exportar JSON</button>
+      </div>
+
+      <div class="list" id="locList"></div>
+    </section>
+
+    <!-- DIREITA -->
+    <section class="card">
+      <h2>3) Pessoa (campos fixos)</h2>
+
+      <label for="locSelect">Localidade</label>
+      <select id="locSelect" aria-label="Seleção de localidade"></select>
+
+      <!-- referência prévia da localidade selecionada -->
+      <div>
+        <label for="locReferenciaDisplay">Referência da localidade</label>
+        <input id="locReferenciaDisplay" readonly aria-label="Referência da localidade selecionada" />
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="pNome">Nome</label>
+          <input id="pNome" placeholder="Ex: Francisco Wallace Paixão Silva" aria-label="Nome da pessoa" />
+        </div>
+        <div>
+          <label for="pIcone">Ícone</label>
+          <select id="pIcone" aria-label="Icone da pessoa">
+            <option value="👨🏻">👨🏻 Homem</option>
+            <option value="👩🏻">👩🏻 Mulher</option>
+            <option value="👶🏻">👶🏻 Criança</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="pResp">Responsável</label>
+          <input id="pResp" placeholder="Ex: Bruno" value="Bruno" aria-label="Responsável (edite livremente)" />
+        </div>
+        <div>
+          <label for="pAcao">Ação</label>
+          <select id="pAcao" aria-label="Ação">
+            <option>Orientamos sobre saúde</option>
+            <option>Orientamos sobre benefícios</option>
+            <option>Orientamos sobre documentação</option>
+            <option>Fortalecimento de vínculo</option>
+            <option>Aplicação de diagnóstico</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Encaminhamentos 📌 (fixos)</label>
+      <div class="checks" id="encChecks">
+        <label class="check"><input type="checkbox" value="Cnr"> Cnr</label>
+        <label class="check"><input type="checkbox" value="Creas"> Creas</label>
+        <label class="check"><input type="checkbox" value="farmácia"> farmácia</label>
+        <label class="check"><input type="checkbox" value="medicação"> medicação</label>
+        <label class="check"><input type="checkbox" value="Solicitação de vaga"> Solicitação de vaga</label>
+        <label class="check"><input type="checkbox" value="CadÚnico"> CadÚnico</label>
+
+        <label class="check"><input type="checkbox" value="Entrega de máscara"> Entrega de máscara</label>
+
+        <!-- Temperatura: checkbox + small input -->
+        <label class="check" title="Marque e informe a temperatura (ex: 30,5ºC)">
+          <input type="checkbox" id="enc_temp_cb" value="Temperatura"> Temperatura
+          <input id="tempValue" class="temp-input" placeholder="Ex: 30,5ºC" aria-label="Valor da temperatura" />
+        </label>
+
+        <label class="check"><input type="checkbox" value="33ª DP na Santa Maria"> 33ª DP na Santa Maria</label>
+        <label class="check"><input type="checkbox" value="Emissão de certidão de nascimento"> Emissão de certidão de nascimento</label>
+        <label class="check"><input type="checkbox" value="Emissão de RG"> Emissão de RG</label>
+        <label class="check"><input type="checkbox" value="Pegou a certidão de nascimento"> Pegou a certidão de nascimento</label>
+        <label class="check"><input type="checkbox" value="Pegou a carteira de identidade"> Pegou a carteira de identidade</label>
+        <label class="check"><input type="checkbox" value="Acesso na CTPS"> Acesso na CTPS</label>
+        <label class="check"><input type="checkbox" value="Acesso na VEPERA"> Acesso na VEPERA</label>
+        <label class="check"><input type="checkbox" value="ACESSO NA VEPEMA"> ACESSO NA VEPEMA</label>
+        <label class="check"><input type="checkbox" value="NA HORA DO GAMA"> NA HORA DO GAMA</label>
+        <label class="check"><input type="checkbox" value="LIGAÇÃO NO 111"> LIGAÇÃO NO 111</label>
+      </div>
+
+      <div class="btns">
+        <button class="primary" id="addPersonBtn" aria-label="Adicionar pessoa">Adicionar pessoa</button>
+        <button id="cancelEditBtn" style="display:none;" aria-label="Cancelar edição">Cancelar</button>
+      </div>
+
+      <hr>
+
+      <h2>4) Gerar</h2>
+      <div class="btns">
+        <button class="primary" id="genBtn" aria-label="Gerar relatório">Gerar relatório</button>
+        <button id="copyBtn" disabled aria-label="Copiar relatório">Copiar</button>
+      </div>
+
+      <label for="output">Saída</label>
+      <textarea id="output" readonly aria-label="Saída do relatório"></textarea>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  const STORAGE_KEY = "relatorio-diario:v1";
+  const state = { localidades: [] }; // {id,setor,quadra,ref,pessoas:[{id,nome,icone,resp,acao,encs[], referencia}]}
+  const $ = (id) => document.getElementById(id);
+  const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
+
+  let editingPerson = null; // { locId, personId }
+
+  function formatDateBR(iso){
+    if(!iso) return "";
+    const [y,m,d]=iso.split("-").map(Number);
+    return `${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}/${y}`;
+  }
+  function pad2(n){ const s=String(n); return s.length>=2?s:"0"+s; }
+
+  function totalPessoas(){
+    return state.localidades.reduce((a,l)=>a+(l.pessoas?.length||0),0);
+  }
+  function updateAbordadas(){
+    $("abordadas").value = totalPessoas();
+  }
+
+  function saveState(){
+    try {
+      const payload = {
+        meta: {
+          equipe: $("equipe").value,
+          data: $("data").value,
+          denuncias: $("denuncias").value,
+          acolhimentos: $("acolhimentos").value,
+          encaminhamentos: $("encaminhamentos").value,
+          mascaras: $("mascaras").value,
+          vistos: $("vistos").value,
+          naoAbordadas: $("naoAbordadas").value,
+          autor: $("autor").value,
+          tempValue: $("tempValue") ? $("tempValue").value : ""
+        },
+        localidades: state.localidades
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (e) {
+      console.warn("Não foi possível salvar no localStorage", e);
+    }
+  }
+
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const parsed = JSON.parse(raw);
+      if(parsed.meta){
+        $("equipe").value = parsed.meta.equipe || $("equipe").value;
+        if(parsed.meta.data) $("data").value = parsed.meta.data;
+        $("denuncias").value = parsed.meta.denuncias ?? $("denuncias").value;
+        $("acolhimentos").value = parsed.meta.acolhimentos ?? $("acolhimentos").value;
+        $("encaminhamentos").value = parsed.meta.encaminhamentos ?? $("encaminhamentos").value;
+        $("mascaras").value = parsed.meta.mascaras ?? $("mascaras").value;
+        $("vistos").value = parsed.meta.vistos ?? $("vistos").value;
+        $("naoAbordadas").value = parsed.meta.naoAbordadas ?? $("naoAbordadas").value;
+        $("autor").value = parsed.meta.autor ?? $("autor").value;
+        if($("tempValue")) $("tempValue").value = parsed.meta.tempValue ?? "";
+      }
+      if(Array.isArray(parsed.localidades)){
+        state.localidades = parsed.localidades.map(l => ({
+          id: l.id || uid(),
+          setor: l.setor || "Setor Central",
+          quadra: l.quadra || "",
+          ref: l.ref || "",
+          pessoas: Array.isArray(l.pessoas) ? l.pessoas.map(p => ({
+            id: p.id || uid(),
+            nome: p.nome || "",
+            icone: p.icone || "👨🏻",
+            resp: p.resp || "",
+            acao: p.acao || "",
+            encs: Array.isArray(p.encs) ? p.encs : [],
+            referencia: p.referencia || (p.referencia === undefined ? l.ref || "" : "")
+          })) : []
+        }));
+      }
+    } catch (e) {
+      console.warn("Erro ao carregar estado do localStorage", e);
+    }
+  }
+
+  function updateLocReferenceDisplay(){
+    const sel = $("locSelect");
+    const display = $("locReferenciaDisplay");
+    if(!sel || !display) return;
+    const locId = sel.value;
+    const loc = state.localidades.find(l => l.id === locId);
+    display.value = loc ? (loc.ref || "") : "";
+  }
+
+  function clearPersonForm(){
+    $("pNome").value = "";
+    $("pIcone").value = "👨🏻";
+    $("pResp").value = "Bruno";
+    $("pAcao").value = "Orientamos sobre saúde";
+    $("encChecks").querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = false);
+    if($("tempValue")) {
+      $("tempValue").value = "";
+      $("tempValue").disabled = true;
+      $("enc_temp_cb").checked = false;
+    }
+  }
+
+  function startEdit(locId, personId){
+    const loc = state.localidades.find(l => l.id === locId);
+    if(!loc) return;
+    const person = loc.pessoas.find(p => p.id === personId);
+    if(!person) return;
+
+    // set form values
+    $("locSelect").value = locId;
+    $("locSelect").disabled = true; // prevent moving between localidades during edit
+    updateLocReferenceDisplay();
+
+    $("pNome").value = person.nome;
+    $("pIcone").value = person.icone;
+    $("pResp").value = person.resp || "Bruno";
+    $("pAcao").value = person.acao || "Orientamos sobre saúde";
+
+    // set checkboxes based on person's encs
+    const checkedSet = new Set();
+    let tempVal = "";
+    person.encs.forEach(e => {
+      if(e.startsWith("Temperatura:")){
+        checkedSet.add("Temperatura");
+        tempVal = e.replace("Temperatura:","").trim();
+      } else if(e === "Temperatura"){
+        checkedSet.add("Temperatura");
+      } else {
+        checkedSet.add(e);
+      }
+    });
+    $("encChecks").querySelectorAll("input[type=checkbox]").forEach(cb => {
+      cb.checked = checkedSet.has(cb.value);
+    });
+    if($("tempValue")){
+      $("tempValue").value = tempVal;
+      $("tempValue").disabled = !$("enc_temp_cb").checked;
+    }
+
+    editingPerson = { locId, personId };
+    $("addPersonBtn").textContent = "Salvar pessoa";
+    $("cancelEditBtn").style.display = "inline-block";
+    $("pNome").focus();
+  }
+
+  function cancelEdit(){
+    editingPerson = null;
+    $("locSelect").disabled = false;
+    $("addPersonBtn").textContent = "Adicionar pessoa";
+    $("cancelEditBtn").style.display = "none";
+    clearPersonForm();
+  }
+
+  function render(){
+    updateAbordadas();
+
+    // lista
+    const list = $("locList");
+    list.innerHTML = "";
+    state.localidades.forEach((loc, idx) => {
+      const el = document.createElement("div");
+      el.className = "locItem";
+
+      const title = `${idx+1}- ${loc.setor} - ${loc.quadra}${loc.ref ? " - " + loc.ref : ""}`;
+
+      const top = document.createElement("div");
+      top.className = "locTop";
+      top.innerHTML = `<div><div class="locTitle">${title}</div><div class="small">${loc.pessoas.length} pessoa(s)</div></div>`;
+
+      const delLoc = document.createElement("button");
+      delLoc.className = "danger";
+      delLoc.textContent = "Excluir";
+      delLoc.setAttribute("aria-label", `Excluir localidade ${title}`);
+      delLoc.onclick = () => {
+        if(!confirm("Excluir localidade e todas as pessoas nela?")) return;
+        state.localidades = state.localidades.filter(l => l.id !== loc.id);
+        saveState();
+        render();
+      };
+
+      top.appendChild(delLoc);
+      el.appendChild(top);
+
+      const people = document.createElement("div");
+      people.className = "people";
+      loc.pessoas.forEach(p => {
+        const pe = document.createElement("div");
+        pe.className = "person";
+
+        // person content
+        const refHtml = p.referencia ? `<div class="small">📍 Referência: ${p.referencia}</div>` : "";
+        const infoHtml = `
+          <div class="personHead">
+            <div class="personInfo">
+              <div class="personName">${p.nome} ${p.icone} <span class="small">(${p.resp})</span></div>
+              <div class="small">${p.acao}</div>
+              ${refHtml}
+              ${p.encs.length ? `<div class="small">📌 ${p.encs.join(" • ")}</div>` : ``}
+            </div>
+            <div class="personActions">
+              <button class="primary edit-btn" aria-label="Editar ${p.nome}">Editar</button>
+              <button class="danger del-btn" aria-label="Excluir ${p.nome}">Excluir</button>
+            </div>
+          </div>
+        `;
+        pe.innerHTML = infoHtml;
+
+        // attach actions
+        pe.querySelector(".del-btn").onclick = () => {
+          if(!confirm(`Excluir ${p.nome} desta localidade?`)) return;
+          const targetLoc = state.localidades.find(l => l.id === loc.id);
+          if(!targetLoc) return;
+          targetLoc.pessoas = targetLoc.pessoas.filter(pp => pp.id !== p.id);
+          saveState();
+          render();
+        };
+        pe.querySelector(".edit-btn").onclick = () => {
+          startEdit(loc.id, p.id);
+        };
+
+        people.appendChild(pe);
+      });
+
+      el.appendChild(people);
+      list.appendChild(el);
+    });
+
+    // select localidades
+    const sel = $("locSelect");
+    sel.innerHTML = "";
+    if(state.localidades.length === 0){
+      sel.disabled = true;
+      $("addPersonBtn").disabled = true;
+      const opt = document.createElement("option");
+      opt.textContent = "Cadastre uma localidade primeiro";
+      opt.value = "";
+      sel.appendChild(opt);
+    } else {
+      sel.disabled = false;
+      $("addPersonBtn").disabled = false;
+      state.localidades.forEach((loc, idx) => {
+        const opt = document.createElement("option");
+        opt.value = loc.id;
+        opt.textContent = `${idx+1}- ${loc.setor} - ${loc.quadra}`;
+        sel.appendChild(opt);
+      });
+      if(!sel.value) sel.value = state.localidades[0].id;
+    }
+
+    updateLocReferenceDisplay();
+    saveState();
+  }
+
+  // init date & load state
+  (function(){
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const dd = String(d.getDate()).padStart(2,"0");
+    $("data").value = `${yyyy}-${mm}-${dd}`;
+    loadState();
+    render();
+
+    // setup temperatura checkbox <-> input behaviour
+    const tempCb = $("enc_temp_cb");
+    const tempInput = $("tempValue");
+    if(tempCb && tempInput){
+      tempInput.disabled = !tempCb.checked;
+      tempCb.addEventListener("change", () => {
+        tempInput.disabled = !tempCb.checked;
+        saveState();
+      });
+      tempInput.addEventListener("change", saveState);
+    }
+
+    // update reference display when user changes selected locality
+    const sel = $("locSelect");
+    if(sel){
+      sel.addEventListener("change", () => updateLocReferenceDisplay());
+    }
+
+    // cancel button
+    $("cancelEditBtn").onclick = () => {
+      cancelEdit();
+    };
+  })();
+
+  // auto-save on changes to inputs/selects
+  document.querySelectorAll("input, select, textarea").forEach(el => {
+    el.addEventListener("change", () => {
+      saveState();
+    });
+  });
+
+  $("addLocBtn").onclick = () => {
+    const setor = $("setor").value;
+    const quadra = $("quadra").value.trim();
+    const ref = $("referencia").value.trim();
+    if(!quadra) return alert("Preencha Quadra / Área.");
+
+    state.localidades.push({ id: uid(), setor, quadra, ref, pessoas: [] });
+    $("quadra").value = "";
+    $("referencia").value = "";
+    render();
+  };
+
+  $("addPersonBtn").onclick = () => {
+    const locId = $("locSelect").value;
+    const loc = state.localidades.find(l => l.id === locId);
+    if(!loc) return alert("Selecione uma localidade.");
+
+    const nome = $("pNome").value.trim();
+    if(!nome) return alert("Preencha o nome.");
+
+    const icone = $("pIcone").value;
+    const resp = $("pResp").value.trim();
+    const acao = $("pAcao").value;
+
+    // Build encaminhamentos array, handle Temperatura specially
+    const encs = Array.from($("encChecks").querySelectorAll("input[type=checkbox]:checked")).map(x => {
+      if(x.value === "Temperatura"){
+        const v = $("tempValue") ? $("tempValue").value.trim() : "";
+        return v ? `Temperatura: ${v}` : "Temperatura";
+      }
+      return x.value;
+    });
+
+    // use locality reference for the person
+    const referencia = loc.ref || "";
+
+    if(editingPerson){
+      // update existing person
+      const targetLoc = state.localidades.find(l => l.id === editingPerson.locId);
+      if(!targetLoc) return;
+      const person = targetLoc.pessoas.find(p => p.id === editingPerson.personId);
+      if(!person) return;
+      person.nome = nome;
+      person.icone = icone;
+      person.resp = resp;
+      person.acao = acao;
+      person.encs = encs;
+      person.referencia = referencia;
+      // finish editing
+      cancelEdit();
+    } else {
+      // add new
+      loc.pessoas.push({ id: uid(), nome, icone, resp, acao, encs, referencia });
+    }
+
+    // limpar pessoa (form)
+    clearPersonForm();
+    render();
+  };
+
+  $("genBtn").onclick = () => {
+    const equipe = $("equipe").value.trim() || "EQUIPE";
+    const dataFmt = formatDateBR($("data").value);
+    const denuncias = Number($("denuncias").value||0);
+    const acolh = Number($("acolhimentos").value||0);
+    const encamin = Number($("encaminhamentos").value||0);
+    const mascaras = Number($("mascaras").value||0);
+    const vistos = Number($("vistos").value||0);
+    const naoAb = Number($("naoAbordadas").value||0);
+    const autor = $("autor").value.trim();
+
+    let out = "";
+    out += `*RELATÓRIO DIÁRIO - ${equipe} - ${dataFmt}*\n\n`;
+    out += `*DENÚNCIAS RESPONDIDAS: ${pad2(denuncias)}*\n`;
+    out += `*ACOLHIMENTOS SOLICITADOS: ${pad2(acolh)}*\n`;
+    out += `*ENCAMINHAMENTOS REALIZADOS: ${pad2(encamin)}*\n`;
+    out += `*ENTREGAS DE MÁSCARA: ${pad2(mascaras)}*\n`;
+    out += `*VISTOS (PESSOAS QUE CONHECEMOS): ${pad2(vistos)}*\n`;
+    out += `*QT DE PESSOAS ENCONTRADAS E NÃO ABORDADAS (NÃO CONHECEMOS): ${pad2(naoAb)}*\n`;
+    out += `*QUANTIDADE DE PESSOAS ABORDADAS: ${totalPessoas()}*\n`;
+    out += `*AUTOR DO RELATÓRIO: ${autor}*\n\n`;
+
+    state.localidades.forEach((loc, idx) => {
+      out += `${idx+1}- *${loc.setor} - ${loc.quadra}${loc.ref ? " - " + loc.ref : ""}*\n\n`;
+      loc.pessoas.forEach(p => {
+        out += `*${p.nome}* ${p.icone} (${p.resp})\n`;
+        if(p.referencia) out += `📍 Referência: ${p.referencia}\n`;
+        p.encs.forEach(e => out += `📌 ${e}\n`);
+        out += `${p.acao}\n\n`;
+      });
+    });
+
+    out += `*Boa noite a Todos e um ótimo descanso*`;
+
+    $("output").value = out.trim();
+    $("copyBtn").disabled = !$("output").value.trim();
+    saveState();
+  };
+
+  $("copyBtn").onclick = async () => {
+    const text = $("output").value;
+    if(!text) return;
+    try {
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        await navigator.clipboard.writeText(text);
+      } else {
+        $("output").focus();
+        $("output").select();
+        document.execCommand("copy");
+      }
+      alert("Copiado!");
+    } catch {
+      try {
+        $("output").focus();
+        $("output").select();
+        document.execCommand("copy");
+        alert("Copiado!");
+      } catch {
+        alert("Não foi possível copiar automaticamente. Selecione o texto e copie manualmente.");
+      }
+    }
+  };
+
+  $("clearBtn").onclick = () => {
+    if(!confirm("Limpar tudo?")) return;
+    state.localidades = [];
+    $("output").value = "";
+    $("copyBtn").disabled = true;
+    saveState();
+    render();
+  };
+
+  $("exportBtn").onclick = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY) || JSON.stringify({ meta: {}, localidades: state.localidades }, null, 2);
+      const blob = new Blob([raw], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `relatorio-diario-export-${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert("Erro ao exportar JSON.");
+      console.error(e);
+    }
+  };
+
+  render();
+</script>
+</body>
+</html>
